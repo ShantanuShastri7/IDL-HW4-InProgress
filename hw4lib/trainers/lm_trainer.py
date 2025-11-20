@@ -404,8 +404,12 @@ class LMTrainer(BaseTrainer):
             else:
                 # TODO: Use the prompts and the generate_greedy method you implemented in the SequenceGenerator class to generate sequences
                 print("Generating with greedy search...")
-                seqs, scores = NotImplementedError, NotImplementedError
-                raise NotImplementedError # Remove if you implemented the greedy search method
+                seqs, scores = generator.generate_greedy(
+                    prompts,
+                    max_length=generation_config.get('max_length', self.model.max_len),
+                    temperature=generation_config.get('temperature', 1.0),
+                    repeat_penalty=generation_config.get('repeat_penalty', 1.0)
+                )
 
         # Post-process sequences (trim upto EOS token)
         processed_seqs = generator.post_process_sequence(seqs, self.tokenizer)
