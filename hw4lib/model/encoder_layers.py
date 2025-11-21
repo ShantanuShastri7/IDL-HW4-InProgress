@@ -33,22 +33,23 @@ class SelfAttentionEncoderLayer(nn.Module):
     Pre-LN Encoder Layer with self-attention mechanism.
     Used in the encoder part of transformer architectures.
     '''
-    def __init__(self, d_model: int, num_heads: int, d_ff: int, dropout: float = 0.1):
+    def __init__(self, d_model: int, num_heads: int, dropout: float = 0.1, d_ff: int = None):
         '''
         Initialize the SelfAttentionEncoderLayer. 
         Args:
             d_model   (int): The dimension of the model.
             num_heads (int): The number of attention heads.
-            d_ff      (int): The dimension of the feedforward network.
             dropout (float): The dropout rate.
+            d_ff      (int): The dimension of the feedforward network.
         '''
         super().__init__()
-        # TODO: Implement __init__
 
-        # TODO: Initialize the sublayers      
-        self.self_attn = NotImplementedError # Self-attention layer
-        self.ffn = NotImplementedError # Feed-forward network
-        raise NotImplementedError # Remove once implemented
+        # If d_ff is not provided, default to 4 * d_model (Standard Transformer size)
+        if d_ff is None:
+            d_ff = 4 * d_model
+
+        self.self_attn = SelfAttentionLayer(d_model, num_heads, dropout=dropout)
+        self.ffn = FeedForwardLayer(d_model, d_ff, dropout=dropout)
 
     def forward(self, x: torch.Tensor, key_padding_mask: Optional[torch.Tensor] = None) -> Tuple[torch.Tensor, torch.Tensor]:
         '''
@@ -64,8 +65,8 @@ class SelfAttentionEncoderLayer(nn.Module):
         # TODO: Implement forward: Follow the figure in the writeup
 
         # What will be different from decoder self-attention layer?
-        x, mha_attn_weights = NotImplementedError, NotImplementedError
+        x, mha_attn_weights = self.self_attn(x, key_padding_mask=key_padding_mask)
         
-        # TODO: Return the output tensor and attention weights
-        raise NotImplementedError # Remove once implemented
+        x = self.ffn(x)
+        return x, mha_attn_weights
 

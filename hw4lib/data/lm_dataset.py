@@ -62,7 +62,7 @@ class LMDataset(Dataset):
 
         # Set up data paths 
         # TODO: Join root and partition to get the text directory
-        self.text_dir = self.text_dir = os.path.join(config['root'], partition)
+        self.text_dir = os.path.join(config['root'], partition)
 
         # TODO: Get all text files in the text directory in sorted order  
         self.text_files = sorted([os.path.join(self.text_dir, f) for f in os.listdir(self.text_dir) if f.endswith('.npy')])
